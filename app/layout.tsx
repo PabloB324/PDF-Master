@@ -12,9 +12,9 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="es">
-      <body className={`${geistSans.variable} ${geistMono.variable} min-h-screen bg-slate-50 font-sans antialiased`}>
-        <div className="mx-auto max-w-4xl px-4 py-10">{children}</div>
+    <html lang="es" className="dark">
+      <body className={`${geistSans.variable} ${geistMono.variable} min-h-screen bg-slate-950 font-sans antialiased text-slate-100`}>
+        <div className="mx-auto max-w-5xl px-4 py-12">{children}</div>
       </body>
     </html>
   );

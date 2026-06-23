@@ -8,11 +8,7 @@ import { StatusMessage } from "@/components/StatusMessage";
 import { DownloadButton } from "@/components/DownloadButton";
 
 type Degrees = 90 | 180 | 270;
-
-interface RotationEntry {
-  pageIndex: number;
-  degrees: Degrees;
-}
+interface RotationEntry { pageIndex: number; degrees: Degrees; }
 
 export default function RotatePage() {
   const [file, setFile] = useState<File | null>(null);
@@ -28,10 +24,7 @@ export default function RotatePage() {
     const pageNum = parseInt(pageInput, 10);
     if (isNaN(pageNum) || pageNum < 1) return;
     const entry: RotationEntry = { pageIndex: pageNum - 1, degrees: deg };
-    setRotations((prev) => {
-      const withoutDupe = prev.filter((r) => r.pageIndex !== entry.pageIndex);
-      return [...withoutDupe, entry].sort((a, b) => a.pageIndex - b.pageIndex);
-    });
+    setRotations((prev) => [...prev.filter((r) => r.pageIndex !== entry.pageIndex), entry].sort((a, b) => a.pageIndex - b.pageIndex));
     setPageInput("");
   };
 
@@ -39,78 +32,52 @@ export default function RotatePage() {
     e.preventDefault();
     if (!file) { setErrorMsg("Selecciona un PDF."); setStatus("error"); return; }
     if (rotations.length === 0) { setErrorMsg("Agrega al menos una rotación."); setStatus("error"); return; }
-
-    setStatus("loading");
-    setProgress(20);
-    setResultBlob(null);
-
+    setStatus("loading"); setProgress(20); setResultBlob(null);
     const form = new FormData();
     form.append("file", file);
     form.append("rotations", JSON.stringify(rotations));
-
     try {
       setProgress(50);
       const res = await fetch("/api/rotate", { method: "POST", body: form });
       setProgress(90);
-
-      if (!res.ok) {
-        const data = await res.json() as { error: string };
-        throw new Error(data.error);
-      }
-
+      if (!res.ok) { const d = await res.json() as { error: string }; throw new Error(d.error); }
       setResultBlob(await res.blob());
-      setStatus("success");
-      setProgress(100);
+      setStatus("success"); setProgress(100);
     } catch (err) {
       setErrorMsg(err instanceof Error ? err.message : "Error inesperado.");
-      setStatus("error");
-      setProgress(0);
+      setStatus("error"); setProgress(0);
     }
   };
 
   return (
     <main>
       <PageHeader title="Rotar páginas" description="Rota páginas específicas de un PDF." />
-
-      <form onSubmit={handleSubmit} className="space-y-6">
+      <form onSubmit={handleSubmit} className="space-y-5">
         <FileDropzone onFilesSelected={([f]) => setFile(f)} />
-        {file && <p className="text-sm text-slate-600">Archivo: <strong>{file.name}</strong></p>}
+        {file && <p className="text-sm text-slate-400">Archivo: <span className="text-slate-200 font-medium">{file.name}</span></p>}
 
         <div className="flex gap-3 items-end">
           <div className="flex-1">
-            <label className="block text-sm font-medium text-slate-700 mb-1">Página (número)</label>
-            <input
-              type="number"
-              min={1}
-              value={pageInput}
-              onChange={(e) => setPageInput(e.target.value)}
-              placeholder="1"
-              className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
-            />
+            <label className="block text-sm font-medium text-slate-300 mb-2">Página</label>
+            <input type="number" min={1} value={pageInput} onChange={(e) => setPageInput(e.target.value)} onKeyDown={(e) => e.key === "Enter" && (e.preventDefault(), addRotation())} placeholder="1" className="w-full rounded-lg border border-slate-700 bg-slate-900 px-3 py-2.5 text-sm text-slate-100 placeholder-slate-600 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500/50 transition-colors" />
           </div>
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-1">Grados</label>
-            <select
-              value={deg}
-              onChange={(e) => setDeg(parseInt(e.target.value, 10) as Degrees)}
-              className="rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none"
-            >
+            <label className="block text-sm font-medium text-slate-300 mb-2">Grados</label>
+            <select value={deg} onChange={(e) => setDeg(parseInt(e.target.value, 10) as Degrees)} className="rounded-lg border border-slate-700 bg-slate-900 px-3 py-2.5 text-sm text-slate-100 focus:border-blue-500 focus:outline-none transition-colors">
               <option value={90}>90°</option>
               <option value={180}>180°</option>
               <option value={270}>270°</option>
             </select>
           </div>
-          <button type="button" onClick={addRotation} className="rounded-lg bg-slate-100 px-4 py-2 text-sm font-medium hover:bg-slate-200 transition-colors">
-            + Agregar
-          </button>
+          <button type="button" onClick={addRotation} className="rounded-lg border border-slate-700 bg-slate-800 px-4 py-2.5 text-sm font-medium text-slate-300 hover:bg-slate-700 transition-colors">+ Agregar</button>
         </div>
 
         {rotations.length > 0 && (
-          <ul className="space-y-1.5">
+          <ul className="space-y-2">
             {rotations.map((r) => (
-              <li key={r.pageIndex} className="flex items-center justify-between rounded-lg border border-slate-200 bg-white px-4 py-2 text-sm">
-                <span>Página {r.pageIndex + 1} → {r.degrees}°</span>
-                <button type="button" onClick={() => setRotations((prev) => prev.filter((x) => x.pageIndex !== r.pageIndex))} className="text-slate-400 hover:text-red-500 transition-colors">✕</button>
+              <li key={r.pageIndex} className="flex items-center justify-between rounded-lg border border-slate-800 bg-slate-900 px-4 py-2.5 text-sm">
+                <span className="text-slate-300">Página <span className="font-mono text-slate-100">{r.pageIndex + 1}</span> → <span className="text-blue-400">{r.degrees}°</span></span>
+                <button type="button" onClick={() => setRotations((p) => p.filter((x) => x.pageIndex !== r.pageIndex))} className="text-slate-600 hover:text-red-400 transition-colors">✕</button>
               </li>
             ))}
           </ul>
@@ -120,10 +87,8 @@ export default function RotatePage() {
         {status === "error" && <StatusMessage status="error" message={errorMsg} />}
         {status === "success" && <StatusMessage status="success" message="¡Páginas rotadas correctamente!" />}
 
-        <div className="flex items-center gap-4">
-          <button type="submit" disabled={status === "loading"} className="rounded-lg bg-blue-600 px-6 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors">
-            Rotar PDF
-          </button>
+        <div className="flex items-center gap-3">
+          <button type="submit" disabled={status === "loading"} className="rounded-lg bg-blue-600 px-5 py-2.5 text-sm font-semibold text-white hover:bg-blue-500 disabled:opacity-40 disabled:cursor-not-allowed transition-colors duration-200">Rotar PDF</button>
           <DownloadButton blob={resultBlob} filename="rotated.pdf" />
         </div>
       </form>
