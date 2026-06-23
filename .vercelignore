@@ -1,0 +1,6 @@
+__tests__/
+coverage/
+*.test.ts
+*.test.tsx
+vitest.config.ts
+vitest.setup.ts
