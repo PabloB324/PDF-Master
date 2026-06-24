@@ -7,6 +7,8 @@ import { ProgressBar } from "@/components/ProgressBar";
 import { StatusMessage } from "@/components/StatusMessage";
 import type { VerifyMetadataResult } from "@/types/api";
 
+const btnPrimary = "rounded-lg bg-[#1e3a5f] px-5 py-2.5 text-sm font-semibold text-white hover:bg-[#16304f] disabled:opacity-40 disabled:cursor-not-allowed transition-colors duration-200";
+
 function formatBytes(bytes: number): string {
   if (bytes < 1024) return `${bytes} B`;
   if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
@@ -19,9 +21,9 @@ function MetaRow({ label, value }: MetaRowProps) {
   if (value === undefined || value === null) return null;
   const display = typeof value === "boolean" ? (value ? "Sí" : "No") : String(value);
   return (
-    <div className="flex gap-4 border-b border-slate-800 py-3 text-sm last:border-0">
+    <div className="flex gap-4 border-b border-slate-100 py-3 text-sm last:border-0">
       <span className="w-44 shrink-0 text-slate-500">{label}</span>
-      <span className="text-slate-200 break-all font-mono text-xs leading-relaxed">{display}</span>
+      <span className="text-slate-700 break-all font-mono text-xs leading-relaxed">{display}</span>
     </div>
   );
 }
@@ -53,17 +55,19 @@ export default function VerifyMetadataPage() {
   };
 
   return (
-    <main>
+    <main className="max-w-2xl">
       <PageHeader title="Ver metadata" description="Inspecciona la información interna de un PDF." />
       <form onSubmit={handleSubmit} className="space-y-5">
-        <FileDropzone onFilesSelected={([f]) => setFile(f)} />
-        {file && <p className="text-sm text-slate-400">Archivo: <span className="text-slate-200 font-medium">{file.name}</span></p>}
+        <div className="rounded-2xl bg-white p-6 shadow-sm">
+          <FileDropzone onFilesSelected={([f]) => setFile(f)} />
+          {file && <p className="mt-3 text-sm text-slate-500">Seleccionado: <span className="font-medium text-slate-700">{file.name}</span></p>}
+        </div>
 
         {status === "loading" && <ProgressBar value={progress} label="Leyendo metadata..." />}
         {status === "error" && <StatusMessage status="error" message={errorMsg} />}
 
         {status === "success" && result && (
-          <div className="rounded-xl border border-slate-800 bg-slate-900 px-5 py-1">
+          <div className="rounded-2xl border border-slate-200 bg-white px-5 py-1 shadow-sm">
             <MetaRow label="Páginas" value={result.pageCount} />
             <MetaRow label="Tamaño" value={formatBytes(result.fileSize)} />
             <MetaRow label="Versión PDF" value={result.pdfVersion} />
@@ -80,9 +84,7 @@ export default function VerifyMetadataPage() {
           </div>
         )}
 
-        <button type="submit" disabled={status === "loading"} className="rounded-lg bg-blue-600 px-5 py-2.5 text-sm font-semibold text-white hover:bg-blue-500 disabled:opacity-40 disabled:cursor-not-allowed transition-colors duration-200">
-          Analizar
-        </button>
+        <button type="submit" disabled={status === "loading"} className={btnPrimary}>Analizar</button>
       </form>
     </main>
   );

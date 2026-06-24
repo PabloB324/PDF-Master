@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Geist } from "next/font/google";
+import { Sidebar } from "@/components/Sidebar";
 import "./globals.css";
 
-const geistSans = Geist({ variable: "--font-geist-sans", subsets: ["latin"] });
-const geistMono = Geist_Mono({ variable: "--font-geist-mono", subsets: ["latin"] });
+const geist = Geist({ variable: "--font-geist-sans", subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "PDF Master",
@@ -12,9 +12,12 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="es" className="dark">
-      <body className={`${geistSans.variable} ${geistMono.variable} min-h-screen bg-slate-950 font-sans antialiased text-slate-100`}>
-        <div className="mx-auto max-w-5xl px-4 py-12">{children}</div>
+    <html lang="es">
+      <body className={`${geist.variable} font-sans antialiased bg-slate-100`}>
+        <Sidebar />
+        <main className="ml-60 min-h-screen p-10">
+          {children}
+        </main>
       </body>
     </html>
   );

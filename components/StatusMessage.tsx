@@ -8,9 +8,9 @@ interface StatusMessageProps {
 }
 
 const STYLES: Record<Status, string> = {
-  success: "border-emerald-500/30 bg-emerald-500/10 text-emerald-300",
-  error:   "border-red-500/30 bg-red-500/10 text-red-300",
-  info:    "border-blue-500/30 bg-blue-500/10 text-blue-300",
+  success: "border-emerald-200 bg-emerald-50 text-emerald-700",
+  error:   "border-red-200 bg-red-50 text-red-700",
+  info:    "border-cyan-200 bg-cyan-50 text-cyan-700",
 };
 
 const ICONS: Record<Status, React.ReactNode> = {
@@ -35,7 +35,7 @@ export function StatusMessage({ status, message }: StatusMessageProps) {
   return (
     <div
       role="alert"
-      className={`flex items-start gap-2.5 rounded-lg border px-4 py-3 text-sm ${STYLES[status]}`}
+      className={`flex items-start gap-2.5 rounded-xl border px-4 py-3 text-sm ${STYLES[status]}`}
     >
       {ICONS[status]}
       <span>{message}</span>

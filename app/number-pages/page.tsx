@@ -17,7 +17,8 @@ const POSITIONS: { value: PageNumberPosition; label: string }[] = [
   { value: "top-right",     label: "Arriba a la derecha" },
 ];
 
-const inputCls = "w-full rounded-lg border border-slate-700 bg-slate-900 px-3 py-2.5 text-sm text-slate-100 placeholder-slate-600 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500/50 transition-colors";
+const btnPrimary = "rounded-lg bg-[#1e3a5f] px-5 py-2.5 text-sm font-semibold text-white hover:bg-[#16304f] disabled:opacity-40 disabled:cursor-not-allowed transition-colors duration-200";
+const inputCls = "w-full rounded-lg border border-slate-200 bg-white px-3 py-2.5 text-sm text-slate-800 placeholder-slate-400 focus:border-cyan-400 focus:outline-none focus:ring-2 focus:ring-cyan-400/20 transition-colors";
 
 export default function NumberPagesPage() {
   const [file, setFile] = useState<File | null>(null);
@@ -52,35 +53,34 @@ export default function NumberPagesPage() {
   };
 
   return (
-    <main>
+    <main className="max-w-2xl">
       <PageHeader title="Numerar páginas" description="Agrega números de página a tu PDF." />
       <form onSubmit={handleSubmit} className="space-y-5">
-        <FileDropzone onFilesSelected={([f]) => setFile(f)} />
-        {file && <p className="text-sm text-slate-400">Archivo: <span className="text-slate-200 font-medium">{file.name}</span></p>}
-
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-          <div>
-            <label className="block text-sm font-medium text-slate-300 mb-2">Empezar desde</label>
-            <input type="number" min={1} value={startAt} onChange={(e) => setStartAt(parseInt(e.target.value, 10) || 1)} className={inputCls} />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-slate-300 mb-2">Posición</label>
-            <select value={position} onChange={(e) => setPosition(e.target.value as PageNumberPosition)} className={inputCls}>
-              {POSITIONS.map((p) => <option key={p.value} value={p.value}>{p.label}</option>)}
-            </select>
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-slate-300 mb-2">Tamaño de fuente</label>
-            <input type="number" min={6} max={48} value={fontSize} onChange={(e) => setFontSize(parseInt(e.target.value, 10) || 12)} className={inputCls} />
+        <div className="rounded-2xl bg-white p-6 shadow-sm space-y-4">
+          <FileDropzone onFilesSelected={([f]) => setFile(f)} />
+          {file && <p className="text-sm text-slate-500">Seleccionado: <span className="font-medium text-slate-700">{file.name}</span></p>}
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+            <div>
+              <label className="block text-sm font-medium text-slate-700 mb-1.5">Empezar desde</label>
+              <input type="number" min={1} value={startAt} onChange={(e) => setStartAt(parseInt(e.target.value, 10) || 1)} className={inputCls} />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-slate-700 mb-1.5">Posición</label>
+              <select value={position} onChange={(e) => setPosition(e.target.value as PageNumberPosition)} className={inputCls}>
+                {POSITIONS.map((p) => <option key={p.value} value={p.value}>{p.label}</option>)}
+              </select>
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-slate-700 mb-1.5">Tamaño de fuente</label>
+              <input type="number" min={6} max={48} value={fontSize} onChange={(e) => setFontSize(parseInt(e.target.value, 10) || 12)} className={inputCls} />
+            </div>
           </div>
         </div>
-
         {status === "loading" && <ProgressBar value={progress} label="Numerando páginas..." />}
         {status === "error" && <StatusMessage status="error" message={errorMsg} />}
         {status === "success" && <StatusMessage status="success" message="¡Páginas numeradas correctamente!" />}
-
         <div className="flex items-center gap-3">
-          <button type="submit" disabled={status === "loading"} className="rounded-lg bg-blue-600 px-5 py-2.5 text-sm font-semibold text-white hover:bg-blue-500 disabled:opacity-40 disabled:cursor-not-allowed transition-colors duration-200">Numerar</button>
+          <button type="submit" disabled={status === "loading"} className={btnPrimary}>Numerar</button>
           <DownloadButton blob={resultBlob} filename="numbered.pdf" />
         </div>
       </form>

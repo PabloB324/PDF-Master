@@ -46,23 +46,26 @@ export function FileDropzone({
       onDragLeave={() => setIsDragging(false)}
       onDrop={handleDrop}
       className={[
-        "flex flex-col items-center justify-center gap-3 rounded-xl border-2 border-dashed p-10 cursor-pointer transition-all duration-300",
+        "flex flex-col items-center justify-center gap-4 rounded-2xl border-2 border-dashed p-14 cursor-pointer transition-all duration-200 bg-white",
         isDragging
-          ? "border-blue-500 bg-blue-500/5 scale-[1.01]"
-          : "border-slate-700 bg-slate-900 hover:border-slate-500 hover:bg-slate-800/50",
+          ? "border-cyan-400 bg-cyan-50/50"
+          : "border-slate-200 hover:border-cyan-300 hover:bg-cyan-50/30",
       ].join(" ")}
     >
-      <div className={`flex size-12 items-center justify-center rounded-xl transition-colors duration-300 ${isDragging ? "bg-blue-500/20 text-blue-400" : "bg-slate-800 text-slate-500"}`}>
-        <svg xmlns="http://www.w3.org/2000/svg" className="size-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-          <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5m-13.5-9L12 3m0 0 4.5 4.5M12 3v13.5" />
+      <div className={`flex size-14 items-center justify-center rounded-full transition-colors duration-200 ${isDragging ? "bg-cyan-100 text-cyan-600" : "bg-slate-100 text-slate-400"}`}>
+        <svg xmlns="http://www.w3.org/2000/svg" className="size-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+          <path strokeLinecap="round" strokeLinejoin="round" d="M12 16.5V9.75m0 0 3 3m-3-3-3 3M6.75 19.5a4.5 4.5 0 0 1-1.41-8.775 5.25 5.25 0 0 1 10.233-2.33 3 3 0 0 1 3.758 3.848A3.752 3.752 0 0 1 18 19.5H6.75Z" />
         </svg>
       </div>
       <div className="text-center">
-        <p className="text-sm font-medium text-slate-300">
+        <p className="text-sm font-medium text-slate-700">
           {label ?? (multiple ? "Arrastra tus PDFs aquí" : "Arrastra un PDF aquí")}
         </p>
-        <p className="mt-1 text-xs text-slate-600">o haz clic para seleccionar · PDF · Máx {MAX_FILE_SIZE_MB}MB</p>
+        <p className="mt-1 text-xs text-slate-400">o haz clic para seleccionar · PDF · Máx {MAX_FILE_SIZE_MB}MB</p>
       </div>
+      <span className="rounded-full bg-[#1e3a5f] px-5 py-2 text-xs font-semibold uppercase tracking-wider text-white hover:bg-[#16304f] transition-colors">
+        Seleccionar {multiple ? "archivos" : "archivo"}
+      </span>
       <input
         id={inputId}
         type="file"

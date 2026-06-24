@@ -1,34 +1,23 @@
 @import "tailwindcss";
 
-:root {
-  --bg-base: #020617;
-  --bg-card: #0f172a;
-  --bg-elevated: #1e293b;
-}
-
 * {
   box-sizing: border-box;
 }
 
-body {
-  background-color: var(--bg-base);
-  color: #f1f5f9;
-}
-
 ::selection {
-  background-color: #3b82f6;
-  color: white;
+  background-color: #22d3ee;
+  color: #1e3a5f;
 }
 
 ::-webkit-scrollbar {
-  width: 6px;
+  width: 5px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #0f172a;
+  background: transparent;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #334155;
+  background: #cbd5e1;
   border-radius: 3px;
 }

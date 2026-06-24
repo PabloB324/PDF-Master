@@ -7,7 +7,8 @@ import { ProgressBar } from "@/components/ProgressBar";
 import { StatusMessage } from "@/components/StatusMessage";
 import { DownloadButton } from "@/components/DownloadButton";
 
-const inputCls = "w-full rounded-lg border border-slate-700 bg-slate-900 px-3 py-2.5 text-sm text-slate-100 placeholder-slate-600 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500/50 transition-colors";
+const btnPrimary = "rounded-lg bg-[#1e3a5f] px-5 py-2.5 text-sm font-semibold text-white hover:bg-[#16304f] disabled:opacity-40 disabled:cursor-not-allowed transition-colors duration-200";
+const inputCls = "w-full rounded-lg border border-slate-200 bg-white px-3 py-2.5 text-sm text-slate-800 placeholder-slate-400 focus:border-cyan-400 focus:outline-none focus:ring-2 focus:ring-cyan-400/20 transition-colors";
 
 export default function ProtectPage() {
   const [file, setFile] = useState<File | null>(null);
@@ -41,29 +42,26 @@ export default function ProtectPage() {
   };
 
   return (
-    <main>
+    <main className="max-w-2xl">
       <PageHeader title="Proteger PDF" description="Cifra un PDF con contraseña para restringir su acceso." />
       <form onSubmit={handleSubmit} className="space-y-5">
-        <FileDropzone onFilesSelected={([f]) => setFile(f)} />
-        {file && <p className="text-sm text-slate-400">Archivo: <span className="text-slate-200 font-medium">{file.name}</span></p>}
-
-        <div className="space-y-4">
+        <div className="rounded-2xl bg-white p-6 shadow-sm space-y-4">
+          <FileDropzone onFilesSelected={([f]) => setFile(f)} />
+          {file && <p className="text-sm text-slate-500">Seleccionado: <span className="font-medium text-slate-700">{file.name}</span></p>}
           <div>
-            <label className="block text-sm font-medium text-slate-300 mb-2">Contraseña de usuario <span className="text-red-400">*</span></label>
+            <label className="block text-sm font-medium text-slate-700 mb-1.5">Contraseña de usuario <span className="text-red-400">*</span></label>
             <input type="password" value={userPassword} onChange={(e) => setUserPassword(e.target.value)} placeholder="Contraseña para abrir el PDF" className={inputCls} />
           </div>
           <div>
-            <label className="block text-sm font-medium text-slate-300 mb-2">Contraseña de propietario <span className="text-slate-500 font-normal">(opcional)</span></label>
+            <label className="block text-sm font-medium text-slate-700 mb-1.5">Contraseña de propietario <span className="text-slate-400 font-normal">(opcional)</span></label>
             <input type="password" value={ownerPassword} onChange={(e) => setOwnerPassword(e.target.value)} placeholder="Para editar permisos del PDF" className={inputCls} />
           </div>
         </div>
-
         {status === "loading" && <ProgressBar value={progress} label="Protegiendo PDF..." />}
         {status === "error" && <StatusMessage status="error" message={errorMsg} />}
         {status === "success" && <StatusMessage status="success" message="¡PDF protegido con contraseña!" />}
-
         <div className="flex items-center gap-3">
-          <button type="submit" disabled={status === "loading"} className="rounded-lg bg-blue-600 px-5 py-2.5 text-sm font-semibold text-white hover:bg-blue-500 disabled:opacity-40 disabled:cursor-not-allowed transition-colors duration-200">Proteger</button>
+          <button type="submit" disabled={status === "loading"} className={btnPrimary}>Proteger</button>
           <DownloadButton blob={resultBlob} filename="protected.pdf" />
         </div>
       </form>
