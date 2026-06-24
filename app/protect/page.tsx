@@ -6,9 +6,16 @@ import { FileDropzone } from "@/components/FileDropzone";
 import { ProgressBar } from "@/components/ProgressBar";
 import { StatusMessage } from "@/components/StatusMessage";
 import { DownloadButton } from "@/components/DownloadButton";
+import { ToolLayout } from "@/components/ToolLayout";
 
 const btnPrimary = "rounded-lg bg-[#1e3a5f] px-5 py-2.5 text-sm font-semibold text-white hover:bg-[#16304f] disabled:opacity-40 disabled:cursor-not-allowed transition-colors duration-200";
 const inputCls = "w-full rounded-lg border border-slate-200 bg-white px-3 py-2.5 text-sm text-slate-800 placeholder-slate-400 focus:border-cyan-400 focus:outline-none focus:ring-2 focus:ring-cyan-400/20 transition-colors";
+
+const STEPS = [
+  { title: "Sube tu PDF", description: "Arrastra o selecciona el archivo PDF que deseas proteger." },
+  { title: "Define una contraseña", description: "La contraseña de usuario es obligatoria. La de propietario restringe la edición." },
+  { title: "Descarga el PDF cifrado", description: "Obtén tu PDF protegido con cifrado AES." },
+];
 
 export default function ProtectPage() {
   const [file, setFile] = useState<File | null>(null);
@@ -42,9 +49,9 @@ export default function ProtectPage() {
   };
 
   return (
-    <main className="max-w-2xl">
+    <ToolLayout breadcrumb="Proteger PDF" steps={STEPS} note="Las contraseñas no se almacenan. El cifrado ocurre en el servidor y el archivo se descarta inmediatamente.">
       <PageHeader title="Proteger PDF" description="Cifra un PDF con contraseña para restringir su acceso." />
-      <form onSubmit={handleSubmit} className="space-y-5">
+      <form onSubmit={handleSubmit} className="space-y-4">
         <div className="rounded-2xl bg-white p-6 shadow-sm space-y-4">
           <FileDropzone onFilesSelected={([f]) => setFile(f)} />
           {file && <p className="text-sm text-slate-500">Seleccionado: <span className="font-medium text-slate-700">{file.name}</span></p>}
@@ -65,6 +72,6 @@ export default function ProtectPage() {
           <DownloadButton blob={resultBlob} filename="protected.pdf" />
         </div>
       </form>
-    </main>
+    </ToolLayout>
   );
 }

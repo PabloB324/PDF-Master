@@ -58,13 +58,16 @@ export function Sidebar() {
   return (
     <aside className="fixed inset-y-0 left-0 flex w-60 flex-col bg-[#1e3a5f]">
       {/* Logo */}
-      <div className="flex items-center gap-2.5 px-5 py-6 border-b border-white/10">
+      <div className="flex items-center gap-2.5 px-5 py-5 border-b border-white/10">
         <div className="flex size-8 items-center justify-center rounded-lg bg-cyan-400">
           <svg xmlns="http://www.w3.org/2000/svg" className="size-4 text-[#1e3a5f]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z" />
           </svg>
         </div>
-        <span className="text-sm font-bold tracking-widest text-white uppercase">PDF Master</span>
+        <div>
+          <p className="text-sm font-bold tracking-widest text-white uppercase leading-none">PDF Master</p>
+          <p className="text-[10px] text-white/40 mt-0.5">Gestor de PDF</p>
+        </div>
       </div>
 
       {/* Nav */}
@@ -92,9 +95,21 @@ export function Sidebar() {
         })}
       </nav>
 
-      {/* Footer */}
-      <div className="border-t border-white/10 px-5 py-4">
-        <p className="text-xs text-white/30">Archivos procesados en servidor · Sin almacenamiento</p>
+      {/* Trust badge */}
+      <div className="mx-3 mb-3 rounded-xl bg-white/8 p-4">
+        <div className="flex items-center gap-2 mb-1.5">
+          <svg xmlns="http://www.w3.org/2000/svg" className="size-4 text-cyan-400 shrink-0" viewBox="0 0 24 24" fill="currentColor">
+            <path fillRule="evenodd" d="M12.516 2.17a.75.75 0 0 0-1.032 0 11.209 11.209 0 0 1-7.877 3.08.75.75 0 0 0-.722.515A12.74 12.74 0 0 0 2.25 9.75c0 5.942 4.064 10.933 9.563 12.348a.749.749 0 0 0 .374 0c5.499-1.415 9.563-6.406 9.563-12.348 0-1.39-.223-2.73-.635-3.985a.75.75 0 0 0-.722-.516l-.143.001c-2.996 0-5.717-1.17-7.734-3.08Zm3.094 8.016a.75.75 0 1 0-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 0 0-1.06 1.06l2.25 2.25a.75.75 0 0 0 1.14-.094l3.75-5.25Z" clipRule="evenodd" />
+          </svg>
+          <span className="text-xs font-semibold text-white/80">100% Seguro</span>
+        </div>
+        <p className="text-xs text-white/40 leading-relaxed">Tus archivos se procesan en el servidor sin almacenamiento permanente.</p>
+      </div>
+
+      {/* Status */}
+      <div className="border-t border-white/10 px-5 py-3 flex items-center gap-2">
+        <span className="size-2 rounded-full bg-emerald-400 shrink-0" />
+        <p className="text-xs text-white/35">Procesados en servidor · Sin almacenamiento</p>
       </div>
     </aside>
   );

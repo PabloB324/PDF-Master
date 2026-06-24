@@ -6,9 +6,16 @@ import { FileDropzone } from "@/components/FileDropzone";
 import { ProgressBar } from "@/components/ProgressBar";
 import { StatusMessage } from "@/components/StatusMessage";
 import { DownloadButton } from "@/components/DownloadButton";
+import { ToolLayout } from "@/components/ToolLayout";
 
 const btnPrimary = "rounded-lg bg-[#1e3a5f] px-5 py-2.5 text-sm font-semibold text-white hover:bg-[#16304f] disabled:opacity-40 disabled:cursor-not-allowed transition-colors duration-200";
 const inputCls = "w-full rounded-lg border border-slate-200 bg-white px-3 py-2.5 text-sm text-slate-800 placeholder-slate-400 focus:border-cyan-400 focus:outline-none focus:ring-2 focus:ring-cyan-400/20 transition-colors";
+
+const STEPS = [
+  { title: "Sube tu PDF protegido", description: "Arrastra o selecciona el archivo PDF que tiene contraseña." },
+  { title: "Ingresa la contraseña", description: "Escribe la contraseña actual del PDF para desbloquearlo." },
+  { title: "Descarga sin contraseña", description: "Obtén el mismo PDF sin restricciones de acceso." },
+];
 
 export default function UnlockPage() {
   const [file, setFile] = useState<File | null>(null);
@@ -40,9 +47,9 @@ export default function UnlockPage() {
   };
 
   return (
-    <main className="max-w-2xl">
+    <ToolLayout breadcrumb="Desbloquear PDF" steps={STEPS}>
       <PageHeader title="Desbloquear PDF" description="Elimina la protección de contraseña de un PDF cifrado." />
-      <form onSubmit={handleSubmit} className="space-y-5">
+      <form onSubmit={handleSubmit} className="space-y-4">
         <div className="rounded-2xl bg-white p-6 shadow-sm space-y-4">
           <FileDropzone onFilesSelected={([f]) => setFile(f)} />
           {file && <p className="text-sm text-slate-500">Seleccionado: <span className="font-medium text-slate-700">{file.name}</span></p>}
@@ -59,6 +66,6 @@ export default function UnlockPage() {
           <DownloadButton blob={resultBlob} filename="unlocked.pdf" />
         </div>
       </form>
-    </main>
+    </ToolLayout>
   );
 }

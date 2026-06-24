@@ -6,9 +6,16 @@ import { FileDropzone } from "@/components/FileDropzone";
 import { ProgressBar } from "@/components/ProgressBar";
 import { StatusMessage } from "@/components/StatusMessage";
 import { DownloadButton } from "@/components/DownloadButton";
+import { ToolLayout } from "@/components/ToolLayout";
 
 const btnPrimary = "rounded-lg bg-[#1e3a5f] px-5 py-2.5 text-sm font-semibold text-white hover:bg-[#16304f] disabled:opacity-40 disabled:cursor-not-allowed transition-colors duration-200";
 const inputCls = "w-full rounded-lg border border-slate-200 bg-white px-3 py-2.5 text-sm text-slate-800 placeholder-slate-400 focus:border-cyan-400 focus:outline-none focus:ring-2 focus:ring-cyan-400/20 transition-colors";
+
+const STEPS = [
+  { title: "Sube tu PDF", description: "Arrastra o selecciona el archivo PDF desde tu dispositivo." },
+  { title: "Indica las páginas", description: "Escribe los números o rangos de páginas que deseas extraer. Ej: 1, 3, 5-8." },
+  { title: "Descarga el resultado", description: "Obtén un nuevo PDF con las páginas seleccionadas." },
+];
 
 const parsePages = (raw: string): number[] => {
   const pages = new Set<number>();
@@ -48,25 +55,26 @@ export default function ExtractPage() {
   };
 
   return (
-    <main className="max-w-2xl">
+    <ToolLayout breadcrumb="Extraer páginas" steps={STEPS} note="Tus archivos se procesan de forma segura y no se almacenan en nuestros servidores.">
       <PageHeader title="Extraer páginas" description="Selecciona las páginas que deseas extraer de un PDF." />
-      <form onSubmit={handleSubmit} className="space-y-5">
+      <form onSubmit={handleSubmit} className="space-y-4">
         <div className="rounded-2xl bg-white p-6 shadow-sm space-y-4">
           <FileDropzone onFilesSelected={([f]) => setFile(f)} />
           {file && <p className="text-sm text-slate-500">Seleccionado: <span className="font-medium text-slate-700">{file.name}</span></p>}
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-1.5">Páginas <span className="text-slate-400 font-normal">(ej: 1, 3, 5-8)</span></label>
-            <input type="text" value={pagesInput} onChange={(e) => setPagesInput(e.target.value)} placeholder="1, 3, 5-8" className={inputCls} />
+            <label className="block text-sm font-medium text-slate-700 mb-1.5">Páginas a extraer <span className="text-slate-400 font-normal">(ej: 1, 3, 5-8)</span></label>
+            <input type="text" value={pagesInput} onChange={(e) => setPagesInput(e.target.value)} placeholder="Ej: 1, 3, 5-8, 11-13" className={inputCls} />
+            <p className="mt-1 text-xs text-slate-400">Ejemplos: 1, 3, 5-8</p>
           </div>
         </div>
         {status === "loading" && <ProgressBar value={progress} label="Extrayendo páginas..." />}
         {status === "error" && <StatusMessage status="error" message={errorMsg} />}
         {status === "success" && <StatusMessage status="success" message="¡Páginas extraídas correctamente!" />}
         <div className="flex items-center gap-3">
-          <button type="submit" disabled={status === "loading"} className={btnPrimary}>Extraer</button>
+          <button type="submit" disabled={status === "loading"} className={btnPrimary}>Extraer páginas</button>
           <DownloadButton blob={resultBlob} filename="extracted.pdf" />
         </div>
       </form>
-    </main>
+    </ToolLayout>
   );
 }

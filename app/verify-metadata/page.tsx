@@ -5,9 +5,16 @@ import { PageHeader } from "@/components/PageHeader";
 import { FileDropzone } from "@/components/FileDropzone";
 import { ProgressBar } from "@/components/ProgressBar";
 import { StatusMessage } from "@/components/StatusMessage";
+import { ToolLayout } from "@/components/ToolLayout";
 import type { VerifyMetadataResult } from "@/types/api";
 
 const btnPrimary = "rounded-lg bg-[#1e3a5f] px-5 py-2.5 text-sm font-semibold text-white hover:bg-[#16304f] disabled:opacity-40 disabled:cursor-not-allowed transition-colors duration-200";
+
+const STEPS = [
+  { title: "Sube tu PDF", description: "Arrastra o selecciona el archivo PDF que deseas inspeccionar." },
+  { title: "Análisis automático", description: "El sistema extrae la información interna del documento." },
+  { title: "Revisa la metadata", description: "Verás título, autor, fechas, versión PDF, cifrado y más." },
+];
 
 function formatBytes(bytes: number): string {
   if (bytes < 1024) return `${bytes} B`;
@@ -55,17 +62,15 @@ export default function VerifyMetadataPage() {
   };
 
   return (
-    <main className="max-w-2xl">
+    <ToolLayout breadcrumb="Metadata" steps={STEPS}>
       <PageHeader title="Ver metadata" description="Inspecciona la información interna de un PDF." />
-      <form onSubmit={handleSubmit} className="space-y-5">
+      <form onSubmit={handleSubmit} className="space-y-4">
         <div className="rounded-2xl bg-white p-6 shadow-sm">
           <FileDropzone onFilesSelected={([f]) => setFile(f)} />
           {file && <p className="mt-3 text-sm text-slate-500">Seleccionado: <span className="font-medium text-slate-700">{file.name}</span></p>}
         </div>
-
         {status === "loading" && <ProgressBar value={progress} label="Leyendo metadata..." />}
         {status === "error" && <StatusMessage status="error" message={errorMsg} />}
-
         {status === "success" && result && (
           <div className="rounded-2xl border border-slate-200 bg-white px-5 py-1 shadow-sm">
             <MetaRow label="Páginas" value={result.pageCount} />
@@ -83,9 +88,8 @@ export default function VerifyMetadataPage() {
             <MetaRow label="Última modificación" value={result.modificationDate} />
           </div>
         )}
-
         <button type="submit" disabled={status === "loading"} className={btnPrimary}>Analizar</button>
       </form>
-    </main>
+    </ToolLayout>
   );
 }

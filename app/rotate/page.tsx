@@ -6,9 +6,16 @@ import { FileDropzone } from "@/components/FileDropzone";
 import { ProgressBar } from "@/components/ProgressBar";
 import { StatusMessage } from "@/components/StatusMessage";
 import { DownloadButton } from "@/components/DownloadButton";
+import { ToolLayout } from "@/components/ToolLayout";
 
 const btnPrimary = "rounded-lg bg-[#1e3a5f] px-5 py-2.5 text-sm font-semibold text-white hover:bg-[#16304f] disabled:opacity-40 disabled:cursor-not-allowed transition-colors duration-200";
 const inputCls = "w-full rounded-lg border border-slate-200 bg-white px-3 py-2.5 text-sm text-slate-800 placeholder-slate-400 focus:border-cyan-400 focus:outline-none focus:ring-2 focus:ring-cyan-400/20 transition-colors";
+
+const STEPS = [
+  { title: "Sube tu PDF", description: "Arrastra o selecciona el archivo PDF desde tu dispositivo." },
+  { title: "Indica la rotación", description: "Escribe el número de página y los grados de rotación. Puedes agregar varias." },
+  { title: "Descarga el resultado", description: "Obtén el PDF con las páginas rotadas en los ángulos indicados." },
+];
 
 type Degrees = 90 | 180 | 270;
 interface RotationEntry { pageIndex: number; degrees: Degrees; }
@@ -49,9 +56,9 @@ export default function RotatePage() {
   };
 
   return (
-    <main className="max-w-2xl">
+    <ToolLayout breadcrumb="Rotar páginas" steps={STEPS}>
       <PageHeader title="Rotar páginas" description="Rota una o varias páginas de un PDF 90°, 180° o 270°." />
-      <form onSubmit={handleSubmit} className="space-y-5">
+      <form onSubmit={handleSubmit} className="space-y-4">
         <div className="rounded-2xl bg-white p-6 shadow-sm space-y-4">
           <FileDropzone onFilesSelected={([f]) => setFile(f)} />
           {file && <p className="text-sm text-slate-500">Seleccionado: <span className="font-medium text-slate-700">{file.name}</span></p>}
@@ -87,6 +94,6 @@ export default function RotatePage() {
           <DownloadButton blob={resultBlob} filename="rotated.pdf" />
         </div>
       </form>
-    </main>
+    </ToolLayout>
   );
 }

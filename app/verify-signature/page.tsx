@@ -5,9 +5,16 @@ import { PageHeader } from "@/components/PageHeader";
 import { FileDropzone } from "@/components/FileDropzone";
 import { ProgressBar } from "@/components/ProgressBar";
 import { StatusMessage } from "@/components/StatusMessage";
+import { ToolLayout } from "@/components/ToolLayout";
 import type { VerifySignatureResult } from "@/types/api";
 
 const btnPrimary = "rounded-lg bg-[#1e3a5f] px-5 py-2.5 text-sm font-semibold text-white hover:bg-[#16304f] disabled:opacity-40 disabled:cursor-not-allowed transition-colors duration-200";
+
+const STEPS = [
+  { title: "Sube tu PDF", description: "Arrastra o selecciona el archivo PDF que deseas analizar." },
+  { title: "Análisis automático", description: "El sistema escanea el documento en busca de campos de firma digital." },
+  { title: "Revisa los resultados", description: "Verás los campos de firma encontrados con su formato y detalles." },
+];
 
 export default function VerifySignaturePage() {
   const [file, setFile] = useState<File | null>(null);
@@ -36,17 +43,15 @@ export default function VerifySignaturePage() {
   };
 
   return (
-    <main className="max-w-2xl">
+    <ToolLayout breadcrumb="Verificar firma" steps={STEPS}>
       <PageHeader title="Verificar firma digital" description="Detecta campos de firma digital en un PDF." />
-      <form onSubmit={handleSubmit} className="space-y-5">
+      <form onSubmit={handleSubmit} className="space-y-4">
         <div className="rounded-2xl bg-white p-6 shadow-sm space-y-4">
           <FileDropzone onFilesSelected={([f]) => setFile(f)} />
           {file && <p className="text-sm text-slate-500">Seleccionado: <span className="font-medium text-slate-700">{file.name}</span></p>}
         </div>
-
         {status === "loading" && <ProgressBar value={progress} label="Analizando firmas..." />}
         {status === "error" && <StatusMessage status="error" message={errorMsg} />}
-
         {status === "success" && result && (
           <div className="space-y-3">
             <StatusMessage
@@ -71,9 +76,8 @@ export default function VerifySignaturePage() {
             )}
           </div>
         )}
-
-        <button type="submit" disabled={status === "loading"} className={btnPrimary}>Verificar</button>
+        <button type="submit" disabled={status === "loading"} className={btnPrimary}>Verificar firma</button>
       </form>
-    </main>
+    </ToolLayout>
   );
 }

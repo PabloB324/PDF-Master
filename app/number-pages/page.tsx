@@ -6,6 +6,7 @@ import { FileDropzone } from "@/components/FileDropzone";
 import { ProgressBar } from "@/components/ProgressBar";
 import { StatusMessage } from "@/components/StatusMessage";
 import { DownloadButton } from "@/components/DownloadButton";
+import { ToolLayout } from "@/components/ToolLayout";
 import type { PageNumberPosition } from "@/types/api";
 
 const POSITIONS: { value: PageNumberPosition; label: string }[] = [
@@ -19,6 +20,12 @@ const POSITIONS: { value: PageNumberPosition; label: string }[] = [
 
 const btnPrimary = "rounded-lg bg-[#1e3a5f] px-5 py-2.5 text-sm font-semibold text-white hover:bg-[#16304f] disabled:opacity-40 disabled:cursor-not-allowed transition-colors duration-200";
 const inputCls = "w-full rounded-lg border border-slate-200 bg-white px-3 py-2.5 text-sm text-slate-800 placeholder-slate-400 focus:border-cyan-400 focus:outline-none focus:ring-2 focus:ring-cyan-400/20 transition-colors";
+
+const STEPS = [
+  { title: "Sube tu PDF", description: "Arrastra o selecciona el archivo PDF desde tu dispositivo." },
+  { title: "Elige posición y estilo", description: "Selecciona dónde aparecerán los números y el tamaño de la fuente." },
+  { title: "Descarga el resultado", description: "Obtén el PDF con los números de página añadidos." },
+];
 
 export default function NumberPagesPage() {
   const [file, setFile] = useState<File | null>(null);
@@ -53,9 +60,9 @@ export default function NumberPagesPage() {
   };
 
   return (
-    <main className="max-w-2xl">
-      <PageHeader title="Numerar páginas" description="Agrega números de página a tu PDF." />
-      <form onSubmit={handleSubmit} className="space-y-5">
+    <ToolLayout breadcrumb="Numerar páginas" steps={STEPS}>
+      <PageHeader title="Numerar páginas" description="Agrega números de página a tu PDF en la posición que prefieras." />
+      <form onSubmit={handleSubmit} className="space-y-4">
         <div className="rounded-2xl bg-white p-6 shadow-sm space-y-4">
           <FileDropzone onFilesSelected={([f]) => setFile(f)} />
           {file && <p className="text-sm text-slate-500">Seleccionado: <span className="font-medium text-slate-700">{file.name}</span></p>}
@@ -71,7 +78,7 @@ export default function NumberPagesPage() {
               </select>
             </div>
             <div>
-              <label className="block text-sm font-medium text-slate-700 mb-1.5">Tamaño de fuente</label>
+              <label className="block text-sm font-medium text-slate-700 mb-1.5">Tamaño fuente</label>
               <input type="number" min={6} max={48} value={fontSize} onChange={(e) => setFontSize(parseInt(e.target.value, 10) || 12)} className={inputCls} />
             </div>
           </div>
@@ -84,6 +91,6 @@ export default function NumberPagesPage() {
           <DownloadButton blob={resultBlob} filename="numbered.pdf" />
         </div>
       </form>
-    </main>
+    </ToolLayout>
   );
 }

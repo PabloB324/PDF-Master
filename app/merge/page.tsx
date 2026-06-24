@@ -6,8 +6,15 @@ import { FileDropzone } from "@/components/FileDropzone";
 import { ProgressBar } from "@/components/ProgressBar";
 import { StatusMessage } from "@/components/StatusMessage";
 import { DownloadButton } from "@/components/DownloadButton";
+import { ToolLayout } from "@/components/ToolLayout";
 
 const btnPrimary = "rounded-lg bg-[#1e3a5f] px-5 py-2.5 text-sm font-semibold text-white hover:bg-[#16304f] disabled:opacity-40 disabled:cursor-not-allowed transition-colors duration-200";
+
+const STEPS = [
+  { title: "Sube tus PDFs", description: "Arrastra 2 o más archivos PDF al área o haz clic para seleccionarlos." },
+  { title: "Revisa el orden", description: "Elimina los que no necesitas. El resultado respetará este orden." },
+  { title: "Descarga el resultado", description: "Obtén un único PDF con todos los archivos combinados." },
+];
 
 export default function MergePage() {
   const [files, setFiles] = useState<File[]>([]);
@@ -33,14 +40,12 @@ export default function MergePage() {
   };
 
   return (
-    <main className="max-w-2xl">
+    <ToolLayout breadcrumb="Unir PDFs" steps={STEPS} note="Tus archivos se procesan de forma segura y no se almacenan en nuestros servidores.">
       <PageHeader title="Unir PDFs" description="Combine múltiples archivos PDF en un solo documento de forma secuencial." />
-
-      <form onSubmit={handleSubmit} className="space-y-5">
+      <form onSubmit={handleSubmit} className="space-y-4">
         <div className="rounded-2xl bg-white p-6 shadow-sm">
           <FileDropzone onFilesSelected={(inc) => setFiles((p) => [...p, ...inc])} multiple />
         </div>
-
         {files.length > 0 && (
           <div className="rounded-2xl bg-white p-4 shadow-sm space-y-2">
             {files.map((f, i) => (
@@ -52,16 +57,14 @@ export default function MergePage() {
             ))}
           </div>
         )}
-
         {status === "loading" && <ProgressBar value={progress} label="Uniendo PDFs..." />}
         {status === "error" && <StatusMessage status="error" message={errorMsg} />}
         {status === "success" && <StatusMessage status="success" message="¡PDFs unidos correctamente!" />}
-
         <div className="flex items-center gap-3">
           <button type="submit" disabled={status === "loading" || files.length < 2} className={btnPrimary}>Unir PDFs</button>
           <DownloadButton blob={resultBlob} filename="merged.pdf" />
         </div>
       </form>
-    </main>
+    </ToolLayout>
   );
 }
