@@ -77,3 +77,29 @@ export interface VerifyMetadataResult {
   isEncrypted: boolean;
   isTagged: boolean;
 }
+
+export interface CompareMetadataField {
+  label: string;
+  a: string | null;
+  b: string | null;
+  match: boolean;
+}
+
+export interface CompareMetadataResult {
+  fields: CompareMetadataField[];
+  totalFields: number;
+  matchingFields: number;
+}
+
+export interface IntegrityCheck {
+  label: string;
+  status: "ok" | "warn" | "fail";
+  detail?: string;
+}
+
+export interface AnalyzeIntegrityResult {
+  checks: IntegrityCheck[];
+  score: number;
+  pageCount: number;
+  fileSize: number;
+}
