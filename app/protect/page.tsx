@@ -6,6 +6,7 @@ import { FileDropzone } from "@/components/FileDropzone";
 import { ProgressBar } from "@/components/ProgressBar";
 import { StatusMessage } from "@/components/StatusMessage";
 import { Toast } from "@/components/Toast";
+import { ToolLayout } from "@/components/ToolLayout";
 
 const btnSubmit = "w-full rounded-xl bg-orange-500 py-3 text-sm font-semibold text-white hover:bg-orange-600 disabled:opacity-40 disabled:cursor-not-allowed transition-colors duration-200";
 const inputCls = "w-full rounded-lg border border-gray-200 bg-white px-3 py-2.5 text-sm text-gray-800 placeholder-gray-400 focus:border-orange-400 focus:outline-none focus:ring-2 focus:ring-orange-400/20 transition-colors";
@@ -15,6 +16,12 @@ function triggerDownload(blob: Blob, filename: string) {
   const a = document.createElement("a"); a.href = url; a.download = filename; a.click();
   URL.revokeObjectURL(url);
 }
+
+const STEPS = [
+  { title: "Sube el PDF", description: "Selecciona el documento que deseas proteger con contraseña." },
+  { title: "Establece las contraseñas", description: "La contraseña de usuario es necesaria para abrir el PDF. La de propietario controla los permisos de edición (opcional)." },
+  { title: "Descarga el PDF protegido", description: "Haz clic en 'Procesar y descargar' para obtener el PDF cifrado con AES-256." },
+];
 
 export default function ProtectPage() {
   const [file, setFile] = useState<File | null>(null);
@@ -46,13 +53,13 @@ export default function ProtectPage() {
   return (
     <>
       {showToast && <Toast message="PDF protegido correctamente" onClose={() => setShowToast(false)} />}
-      <div className="max-w-2xl">
+      <ToolLayout steps={STEPS} note="⚠ Guarda bien tu contraseña. Si la olvidas, no hay forma de recuperarla ni de abrir el archivo.">
         <PageHeader title="Proteger PDF" description="Cifra el documento con una contraseña." />
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="rounded-2xl bg-white p-6 shadow-sm space-y-4">
             <p className="text-sm font-medium text-gray-700">Documento PDF</p>
             <FileDropzone onFilesSelected={([f]) => setFile(f)} />
-            <p className="text-xs text-gray-400">Solo archivos PDF · Máx. 50MB</p>
+            <p className="text-xs text-gray-400">Solo archivos PDF · Máx. 10 MB</p>
             {file && (
               <div className="flex items-center gap-3 rounded-xl border border-gray-100 px-4 py-3">
                 <div className="flex size-7 shrink-0 items-center justify-center rounded-full bg-orange-500">
@@ -80,7 +87,7 @@ export default function ProtectPage() {
             {status === "loading" ? "Procesando..." : "Procesar y descargar"}
           </button>
         </form>
-      </div>
+      </ToolLayout>
     </>
   );
 }

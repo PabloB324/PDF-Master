@@ -6,6 +6,7 @@ import { FileDropzone } from "@/components/FileDropzone";
 import { ProgressBar } from "@/components/ProgressBar";
 import { StatusMessage } from "@/components/StatusMessage";
 import { Toast } from "@/components/Toast";
+import { ToolLayout } from "@/components/ToolLayout";
 
 const btnSubmit = "w-full rounded-xl bg-orange-500 py-3 text-sm font-semibold text-white hover:bg-orange-600 disabled:opacity-40 disabled:cursor-not-allowed transition-colors duration-200";
 const inputCls = "w-full rounded-lg border border-gray-200 bg-white px-3 py-2.5 text-sm text-gray-800 placeholder-gray-400 focus:border-orange-400 focus:outline-none focus:ring-2 focus:ring-orange-400/20 transition-colors";
@@ -27,6 +28,12 @@ const parsePages = (raw: string): number[] => {
   }
   return Array.from(pages).sort((a, b) => a - b);
 };
+
+const STEPS = [
+  { title: "Sube el PDF", description: "Selecciona el documento del que quieres extraer páginas." },
+  { title: "Indica las páginas", description: "Escribe las páginas a extraer separadas por comas. Usa guiones para rangos (ej: 1, 3, 5-8)." },
+  { title: "Descarga el resultado", description: "Haz clic en 'Procesar y descargar' para obtener el nuevo PDF con las páginas seleccionadas." },
+];
 
 export default function ExtractPage() {
   const [file, setFile] = useState<File | null>(null);
@@ -57,13 +64,13 @@ export default function ExtractPage() {
   return (
     <>
       {showToast && <Toast message="Documento generado correctamente" onClose={() => setShowToast(false)} />}
-      <div className="max-w-2xl">
+      <ToolLayout steps={STEPS} note="Combina páginas individuales y rangos: 1, 3, 5-8, 11-13 — extrae páginas 1, 3, 5, 6, 7, 8, 11, 12 y 13.">
         <PageHeader title="Extraer páginas" description="Selecciona las páginas que deseas extraer de un PDF." />
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="rounded-2xl bg-white p-6 shadow-sm space-y-4">
             <p className="text-sm font-medium text-gray-700">Documento PDF</p>
             <FileDropzone onFilesSelected={([f]) => setFile(f)} />
-            <p className="text-xs text-gray-400">Solo archivos PDF · Máx. 50MB</p>
+            <p className="text-xs text-gray-400">Solo archivos PDF · Máx. 10 MB</p>
             {file && (
               <div className="flex items-center gap-3 rounded-xl border border-gray-100 px-4 py-3">
                 <div className="flex size-7 shrink-0 items-center justify-center rounded-full bg-orange-500">
@@ -88,7 +95,7 @@ export default function ExtractPage() {
             {status === "loading" ? "Procesando..." : "Procesar y descargar"}
           </button>
         </form>
-      </div>
+      </ToolLayout>
     </>
   );
 }

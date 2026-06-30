@@ -6,6 +6,7 @@ import { FileDropzone } from "@/components/FileDropzone";
 import { ProgressBar } from "@/components/ProgressBar";
 import { StatusMessage } from "@/components/StatusMessage";
 import { Toast } from "@/components/Toast";
+import { ToolLayout } from "@/components/ToolLayout";
 import type { PageNumberPosition } from "@/types/api";
 
 const POSITIONS: { value: PageNumberPosition; label: string }[] = [
@@ -25,6 +26,12 @@ function triggerDownload(blob: Blob, filename: string) {
   const a = document.createElement("a"); a.href = url; a.download = filename; a.click();
   URL.revokeObjectURL(url);
 }
+
+const STEPS = [
+  { title: "Sube el PDF", description: "Selecciona el documento al que deseas agregar numeración de página." },
+  { title: "Configura la numeración", description: "Elige la posición en la página, el número inicial y el tamaño de la fuente." },
+  { title: "Descarga el resultado", description: "Haz clic en 'Procesar y descargar' para obtener el PDF con números de página." },
+];
 
 export default function NumberPagesPage() {
   const [file, setFile] = useState<File | null>(null);
@@ -56,13 +63,13 @@ export default function NumberPagesPage() {
   return (
     <>
       {showToast && <Toast message="Documento generado correctamente" onClose={() => setShowToast(false)} />}
-      <div className="max-w-2xl">
+      <ToolLayout steps={STEPS} note="El número inicial es útil si el documento es parte de un conjunto ya numerado y quieres continuar la secuencia.">
         <PageHeader title="Numerar páginas" description="Agrega numeración de página en la posición seleccionada." />
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="rounded-2xl bg-white p-6 shadow-sm space-y-4">
             <p className="text-sm font-medium text-gray-700">Documento PDF</p>
             <FileDropzone onFilesSelected={([f]) => setFile(f)} />
-            <p className="text-xs text-gray-400">Solo archivos PDF · Máx. 50MB</p>
+            <p className="text-xs text-gray-400">Solo archivos PDF · Máx. 10 MB</p>
             {file && (
               <div className="flex items-center gap-3 rounded-xl border border-gray-100 px-4 py-3">
                 <div className="flex size-7 shrink-0 items-center justify-center rounded-full bg-orange-500">
@@ -98,7 +105,7 @@ export default function NumberPagesPage() {
             {status === "loading" ? "Procesando..." : "Procesar y descargar"}
           </button>
         </form>
-      </div>
+      </ToolLayout>
     </>
   );
 }

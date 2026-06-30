@@ -16,8 +16,8 @@ export async function POST(req: NextRequest) {
   if (base.type !== "application/pdf" || insert.type !== "application/pdf") {
     return NextResponse.json({ error: "Ambos archivos deben ser PDFs." }, { status: 400 });
   }
-  if (base.size > 50 * 1024 * 1024 || insert.size > 50 * 1024 * 1024) {
-    return NextResponse.json({ error: "Un archivo supera el límite de 50 MB." }, { status: 413 });
+  if (base.size > 10 * 1024 * 1024 || insert.size > 10 * 1024 * 1024) {
+    return NextResponse.json({ error: "Un archivo supera el límite de 10 MB." }, { status: 413 });
   }
 
   const afterPage = afterPageRaw !== null ? parseInt(String(afterPageRaw), 10) : 0;

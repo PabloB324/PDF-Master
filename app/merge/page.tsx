@@ -6,6 +6,7 @@ import { FileDropzone } from "@/components/FileDropzone";
 import { ProgressBar } from "@/components/ProgressBar";
 import { StatusMessage } from "@/components/StatusMessage";
 import { Toast } from "@/components/Toast";
+import { ToolLayout } from "@/components/ToolLayout";
 
 const btnSubmit = "w-full rounded-xl bg-orange-500 py-3 text-sm font-semibold text-white hover:bg-orange-600 disabled:opacity-40 disabled:cursor-not-allowed transition-colors duration-200";
 
@@ -16,6 +17,12 @@ function triggerDownload(blob: Blob, filename: string) {
   a.click();
   URL.revokeObjectURL(url);
 }
+
+const STEPS = [
+  { title: "Sube los archivos", description: "Selecciona o arrastra los PDFs que deseas unir. Puedes agregar varios a la vez." },
+  { title: "Ordena los documentos", description: "El PDF resultante seguirá el orden de la lista, de arriba hacia abajo." },
+  { title: "Descarga el resultado", description: "Haz clic en 'Procesar y descargar' y el PDF combinado se descargará automáticamente." },
+];
 
 export default function MergePage() {
   const [files, setFiles] = useState<File[]>([]);
@@ -46,13 +53,13 @@ export default function MergePage() {
   return (
     <>
       {showToast && <Toast message="Documento generado correctamente" onClose={() => setShowToast(false)} />}
-      <div className="max-w-2xl">
+      <ToolLayout steps={STEPS} note="Puedes eliminar cualquier archivo de la lista haciendo clic en el ícono de basura.">
         <PageHeader title="Unir PDFs" description="Combina varios documentos PDF en uno solo, en el orden seleccionado." />
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="rounded-2xl bg-white p-6 shadow-sm">
             <p className="text-sm font-medium text-gray-700 mb-3">Documentos PDF</p>
             <FileDropzone onFilesSelected={(inc) => setFiles((p) => [...p, ...inc])} multiple />
-            <p className="mt-2 text-xs text-gray-400">Solo archivos PDF · Máx. 50MB por archivo</p>
+            <p className="mt-2 text-xs text-gray-400">Solo archivos PDF · Máx. 10 MB por archivo</p>
           </div>
 
           {files.length > 0 && (
@@ -76,7 +83,7 @@ export default function MergePage() {
           )}
 
           {files.length >= 2 && (
-            <StatusMessage status="info" message="Se generará un nuevo PDF que une todos los documentos en el orden en que los cargaste: el primero al inicio y el último al final." />
+            <StatusMessage status="info" message="Se generará un nuevo PDF que une todos los documentos en el orden en que los cargaste." />
           )}
 
           {status === "error" && <StatusMessage status="error" message={errorMsg} />}
@@ -86,7 +93,7 @@ export default function MergePage() {
             {status === "loading" ? "Procesando..." : "Procesar y descargar"}
           </button>
         </form>
-      </div>
+      </ToolLayout>
     </>
   );
 }

@@ -4,7 +4,14 @@ import { useState, useCallback } from "react";
 import { PageHeader } from "@/components/PageHeader";
 import { FileDropzone } from "@/components/FileDropzone";
 import { ProgressBar } from "@/components/ProgressBar";
+import { ToolLayout } from "@/components/ToolLayout";
 import type { CompareMetadataResult } from "@/types/api";
+
+const STEPS = [
+  { title: "Sube el PDF A", description: "El documento de referencia o el original." },
+  { title: "Sube el PDF B", description: "La copia, versión modificada o documento a comparar." },
+  { title: "Compara los metadatos", description: "Haz clic en 'Comparar metadatos' para ver la tabla campo por campo." },
+];
 
 export default function CompareMetadataPage() {
   const [fileA, setFileA] = useState<File | null>(null);
@@ -51,7 +58,7 @@ export default function CompareMetadataPage() {
   const matchPct = result ? Math.round((result.matchingFields / result.totalFields) * 100) : 0;
 
   return (
-    <div className="mx-auto max-w-3xl">
+    <ToolLayout steps={STEPS} note="Los campos con ✗ indican diferencias. Útil para detectar si un PDF fue alterado respecto a un original.">
       <PageHeader
         title="Comparar metadatos"
         description="Compara los metadatos de dos PDFs campo a campo para detectar diferencias."
@@ -100,7 +107,6 @@ export default function CompareMetadataPage() {
 
       {result && (
         <div className="mt-6 space-y-4">
-          {/* Summary badge */}
           <div className="flex items-center gap-3 rounded-2xl border border-gray-200 bg-white px-5 py-4 shadow-sm">
             <div className={`flex size-10 shrink-0 items-center justify-center rounded-full text-sm font-bold ${matchPct === 100 ? "bg-emerald-100 text-emerald-600" : matchPct >= 50 ? "bg-orange-100 text-orange-600" : "bg-red-100 text-red-600"}`}>
               {matchPct}%
@@ -115,7 +121,6 @@ export default function CompareMetadataPage() {
             </div>
           </div>
 
-          {/* Field table */}
           <div className="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm">
             <div className="grid grid-cols-[1fr_2fr_2fr_auto] border-b border-gray-100 bg-gray-50 px-4 py-2.5 text-xs font-semibold uppercase tracking-wide text-gray-400">
               <span>Campo</span>
@@ -151,6 +156,6 @@ export default function CompareMetadataPage() {
           </div>
         </div>
       )}
-    </div>
+    </ToolLayout>
   );
 }

@@ -14,8 +14,8 @@ export async function POST(req: NextRequest) {
   if (file.type !== "application/pdf") {
     return NextResponse.json({ error: "El archivo debe ser un PDF." }, { status: 400 });
   }
-  if (file.size > 50 * 1024 * 1024) {
-    return NextResponse.json({ error: "El archivo supera el límite de 50 MB." }, { status: 413 });
+  if (file.size > 10 * 1024 * 1024) {
+    return NextResponse.json({ error: "El archivo supera el límite de 10 MB." }, { status: 413 });
   }
 
   try {

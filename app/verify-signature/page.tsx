@@ -5,9 +5,16 @@ import { PageHeader } from "@/components/PageHeader";
 import { FileDropzone } from "@/components/FileDropzone";
 import { ProgressBar } from "@/components/ProgressBar";
 import { StatusMessage } from "@/components/StatusMessage";
+import { ToolLayout } from "@/components/ToolLayout";
 import type { VerifySignatureResult } from "@/types/api";
 
 const btnSubmit = "w-full rounded-xl bg-orange-500 py-3 text-sm font-semibold text-white hover:bg-orange-600 disabled:opacity-40 disabled:cursor-not-allowed transition-colors duration-200";
+
+const STEPS = [
+  { title: "Sube el PDF", description: "Selecciona el documento cuyas firmas digitales quieres verificar." },
+  { title: "Analiza el documento", description: "Haz clic en 'Verificar firma' para detectar campos de firma digital." },
+  { title: "Revisa los resultados", description: "Se listarán todos los campos de firma encontrados con su información detallada." },
+];
 
 export default function VerifySignaturePage() {
   const [file, setFile] = useState<File | null>(null);
@@ -33,13 +40,13 @@ export default function VerifySignaturePage() {
   };
 
   return (
-    <div className="max-w-2xl">
+    <ToolLayout steps={STEPS} note="Esta herramienta detecta la presencia de firmas digitales pero no valida su autenticidad criptográfica.">
       <PageHeader title="Verificar firma digital" description="Detecta campos de firma digital en un PDF." />
       <form onSubmit={handleSubmit} className="space-y-4">
         <div className="rounded-2xl bg-white p-6 shadow-sm space-y-4">
           <p className="text-sm font-medium text-gray-700">Documento PDF</p>
           <FileDropzone onFilesSelected={([f]) => setFile(f)} />
-          <p className="text-xs text-gray-400">Solo archivos PDF · Máx. 50MB</p>
+          <p className="text-xs text-gray-400">Solo archivos PDF · Máx. 10 MB</p>
           {file && (
             <div className="flex items-center gap-3 rounded-xl border border-gray-100 px-4 py-3">
               <div className="flex size-7 shrink-0 items-center justify-center rounded-full bg-orange-500">
@@ -78,6 +85,6 @@ export default function VerifySignaturePage() {
           {status === "loading" ? "Analizando..." : "Verificar firma"}
         </button>
       </form>
-    </div>
+    </ToolLayout>
   );
 }

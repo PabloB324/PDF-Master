@@ -5,6 +5,7 @@ import { PageHeader } from "@/components/PageHeader";
 import { FileDropzone } from "@/components/FileDropzone";
 import { ProgressBar } from "@/components/ProgressBar";
 import { StatusMessage } from "@/components/StatusMessage";
+import { ToolLayout } from "@/components/ToolLayout";
 import type { VerifyMetadataResult } from "@/types/api";
 
 const btnSubmit = "w-full rounded-xl bg-orange-500 py-3 text-sm font-semibold text-white hover:bg-orange-600 disabled:opacity-40 disabled:cursor-not-allowed transition-colors duration-200";
@@ -25,6 +26,12 @@ function MetaRow({ label, value }: { label: string; value: string | number | boo
     </div>
   );
 }
+
+const STEPS = [
+  { title: "Sube el PDF", description: "Selecciona el documento cuyos metadatos quieres inspeccionar." },
+  { title: "Analiza el documento", description: "Haz clic en 'Analizar metadata' para extraer toda la información interna del PDF." },
+  { title: "Revisa los metadatos", description: "Se mostrarán autor, fechas, versión del PDF, herramienta de creación y más." },
+];
 
 export default function VerifyMetadataPage() {
   const [file, setFile] = useState<File | null>(null);
@@ -50,13 +57,13 @@ export default function VerifyMetadataPage() {
   };
 
   return (
-    <div className="max-w-2xl">
+    <ToolLayout steps={STEPS} note="Los metadatos revelan información sobre cómo y cuándo fue creado el PDF, qué herramienta lo generó y si fue modificado posteriormente.">
       <PageHeader title="Ver metadata" description="Inspecciona la información interna de un PDF." />
       <form onSubmit={handleSubmit} className="space-y-4">
         <div className="rounded-2xl bg-white p-6 shadow-sm space-y-4">
           <p className="text-sm font-medium text-gray-700">Documento PDF</p>
           <FileDropzone onFilesSelected={([f]) => setFile(f)} />
-          <p className="text-xs text-gray-400">Solo archivos PDF · Máx. 50MB</p>
+          <p className="text-xs text-gray-400">Solo archivos PDF · Máx. 10 MB</p>
           {file && (
             <div className="flex items-center gap-3 rounded-xl border border-gray-100 px-4 py-3">
               <div className="flex size-7 shrink-0 items-center justify-center rounded-full bg-orange-500">
@@ -92,6 +99,6 @@ export default function VerifyMetadataPage() {
           {status === "loading" ? "Analizando..." : "Analizar metadata"}
         </button>
       </form>
-    </div>
+    </ToolLayout>
   );
 }

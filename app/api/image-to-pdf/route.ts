@@ -24,8 +24,8 @@ export async function POST(req: NextRequest) {
     if (!ALLOWED_TYPES.includes(file.type as AllowedType)) {
       return NextResponse.json({ error: `Tipo no soportado: ${file.type}. Solo JPEG y PNG.` }, { status: 400 });
     }
-    if (file.size > 20 * 1024 * 1024) {
-      return NextResponse.json({ error: `La imagen "${file.name}" supera el límite de 20 MB.` }, { status: 413 });
+    if (file.size > 5 * 1024 * 1024) {
+      return NextResponse.json({ error: `La imagen "${file.name}" supera el límite de 5 MB.` }, { status: 413 });
     }
     images.push({ buffer: Buffer.from(await file.arrayBuffer()), mimeType: file.type as AllowedType });
   }

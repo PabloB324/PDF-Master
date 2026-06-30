@@ -6,6 +6,7 @@ import { FileDropzone } from "@/components/FileDropzone";
 import { ProgressBar } from "@/components/ProgressBar";
 import { StatusMessage } from "@/components/StatusMessage";
 import { Toast } from "@/components/Toast";
+import { ToolLayout } from "@/components/ToolLayout";
 
 const btnSubmit = "w-full rounded-xl bg-orange-500 py-3 text-sm font-semibold text-white hover:bg-orange-600 disabled:opacity-40 disabled:cursor-not-allowed transition-colors duration-200";
 const inputCls = "w-full rounded-lg border border-gray-200 bg-white px-3 py-2.5 text-sm text-gray-800 placeholder-gray-400 focus:border-orange-400 focus:outline-none focus:ring-2 focus:ring-orange-400/20 transition-colors";
@@ -19,6 +20,12 @@ function triggerDownload(blob: Blob, filename: string) {
 
 type Degrees = 90 | 180 | 270;
 interface RotationEntry { pageIndex: number; degrees: Degrees; }
+
+const STEPS = [
+  { title: "Sube el PDF", description: "Selecciona el documento cuyas páginas quieres rotar." },
+  { title: "Agrega rotaciones", description: "Indica el número de página, selecciona el ángulo (90°, 180° o 270°) y pulsa '+ Agregar'." },
+  { title: "Descarga el resultado", description: "Haz clic en 'Procesar y descargar' una vez configuradas todas las rotaciones." },
+];
 
 export default function RotatePage() {
   const [file, setFile] = useState<File | null>(null);
@@ -58,13 +65,13 @@ export default function RotatePage() {
   return (
     <>
       {showToast && <Toast message="Documento generado correctamente" onClose={() => setShowToast(false)} />}
-      <div className="max-w-2xl">
+      <ToolLayout steps={STEPS} note="Puedes rotar múltiples páginas a distintos ángulos en una sola operación. Si agregas una página ya existente, su ángulo se actualiza.">
         <PageHeader title="Rotar páginas" description="Gira las páginas indicadas al ángulo elegido." />
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="rounded-2xl bg-white p-6 shadow-sm space-y-4">
             <p className="text-sm font-medium text-gray-700">Documento PDF</p>
             <FileDropzone onFilesSelected={([f]) => setFile(f)} />
-            <p className="text-xs text-gray-400">Solo archivos PDF · Máx. 50MB</p>
+            <p className="text-xs text-gray-400">Solo archivos PDF · Máx. 10 MB</p>
             {file && (
               <div className="flex items-center gap-3 rounded-xl border border-gray-100 px-4 py-3">
                 <div className="flex size-7 shrink-0 items-center justify-center rounded-full bg-orange-500">
@@ -107,7 +114,7 @@ export default function RotatePage() {
             {status === "loading" ? "Procesando..." : "Procesar y descargar"}
           </button>
         </form>
-      </div>
+      </ToolLayout>
     </>
   );
 }

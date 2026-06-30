@@ -4,6 +4,7 @@ import { useState, useCallback } from "react";
 import { PageHeader } from "@/components/PageHeader";
 import { FileDropzone } from "@/components/FileDropzone";
 import { ProgressBar } from "@/components/ProgressBar";
+import { ToolLayout } from "@/components/ToolLayout";
 import type { AnalyzeIntegrityResult } from "@/types/api";
 
 const STATUS_CONFIG = {
@@ -11,6 +12,12 @@ const STATUS_CONFIG = {
   warn: { bg: "bg-yellow-100", text: "text-yellow-700", label: "Aviso" },
   fail: { bg: "bg-red-100", text: "text-red-600", label: "Error" },
 } as const;
+
+const STEPS = [
+  { title: "Sube el PDF", description: "Selecciona el documento que deseas analizar." },
+  { title: "Inicia el análisis", description: "Haz clic en 'Analizar integridad' para revisar la estructura interna del PDF." },
+  { title: "Revisa el reporte", description: "Se mostrarán un score general y verificaciones individuales en estado OK / Aviso / Error." },
+];
 
 function ScoreRing({ score }: { score: number }) {
   const color = score >= 80 ? "text-emerald-500" : score >= 50 ? "text-yellow-500" : "text-red-500";
@@ -80,7 +87,7 @@ export default function AnalyzeIntegrityPage() {
     : "";
 
   return (
-    <div className="mx-auto max-w-2xl">
+    <ToolLayout steps={STEPS} note="Un score bajo no implica necesariamente manipulación maliciosa, pero señala anomalías estructurales que merecen atención.">
       <PageHeader
         title="Analizar integridad"
         description="Analiza la estructura del PDF y detecta posibles anomalías o signos de manipulación."
@@ -134,7 +141,6 @@ export default function AnalyzeIntegrityPage() {
 
       {result && (
         <div className="mt-6 space-y-4">
-          {/* Score card */}
           <div className="flex items-center gap-5 rounded-2xl border border-gray-200 bg-white px-6 py-5 shadow-sm">
             <ScoreRing score={result.score} />
             <div>
@@ -148,7 +154,6 @@ export default function AnalyzeIntegrityPage() {
             </div>
           </div>
 
-          {/* Checks list */}
           <div className="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm divide-y divide-gray-50">
             {result.checks.map((check) => {
               const cfg = STATUS_CONFIG[check.status];
@@ -167,6 +172,6 @@ export default function AnalyzeIntegrityPage() {
           </div>
         </div>
       )}
-    </div>
+    </ToolLayout>
   );
 }
