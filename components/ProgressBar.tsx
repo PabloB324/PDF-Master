@@ -11,19 +11,16 @@ export function ProgressBar({ value, label }: ProgressBarProps) {
   return (
     <div className="w-full space-y-2">
       {label && (
-        <div className="flex justify-between text-xs text-slate-500">
-          <span>{label}</span>
-          <span className="font-mono font-medium text-[#1e3a5f]">{clamped}%</span>
-        </div>
+        <p className="text-sm font-medium text-orange-500">{label}</p>
       )}
-      <div className="h-2 w-full overflow-hidden rounded-full bg-slate-200">
+      <div className="h-1.5 w-full overflow-hidden rounded-full bg-gray-200">
         <div
           role="progressbar"
           aria-valuenow={clamped}
           aria-valuemin={0}
           aria-valuemax={100}
           style={{ width: `${clamped}%` }}
-          className="h-full rounded-full bg-gradient-to-r from-[#1e3a5f] to-cyan-400 transition-all duration-500"
+          className="h-full rounded-full bg-orange-500 transition-all duration-500"
         />
       </div>
     </div>
